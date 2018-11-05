@@ -34,22 +34,29 @@ describe('App', () => {
         sandbox.restore()
         app.close()
     })
-    it('get status', function(done) {
+    it('get status', done => {
         request(app)
           .get('/status')
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
-          .expect(200, done)
+          .expect(200)
+          .end((err) => {
+            if (err) return done(err)
+            done()
+        })
     })
-    it('get device', function(done) {
+    it('get device', done => {
         request(app)
           .get('/my-device2')
           .set('Accept', 'application/json')
           .set('Authorization', 'Bearer 1234')
-          .expect('Content-Type', /json/)
-          .expect(200, done)
+          .expect(200)
+          .end((err) => {
+            if (err) return done(err)
+            done()
+        })
     })
-    it('get with bad JWT token', function(done) {
+    it('get with bad JWT token', done => {
         
         const invalidJWTapp = App({ store, jwt: jwtInvalid })
         
@@ -58,9 +65,13 @@ describe('App', () => {
           .set('Accept', 'application/json')
           .set('Authorization', 'Bearer 1234')
           .expect('Content-Type', /json/)
-          .expect(401, done)
+          .expect(401)
+          .end((err) => {
+            if (err) return done(err)
+            done()
+        })
     })
-    it('get with bad JWT token different user', function(done) {
+    it('get with bad JWT token different user', done => {
         
         const invalidJWTapp = App({ store, jwt: jwtDifferentUser })
         
@@ -69,15 +80,23 @@ describe('App', () => {
           .set('Accept', 'application/json')
           .set('Authorization', 'Bearer 1234')
           .expect('Content-Type', /json/)
-          .expect(401, done)
+          .expect(401)
+          .end((err) => {
+            if (err) return done(err)
+            done()
+        })
     })
-    it('get with no device', function(done) {
+    it('get with no device', done => {
         
         request(app)
           .get('/my-device')
           .set('Accept', 'application/json')
           .set('Authorization', 'Bearer 1234')
           .expect('Content-Type', /json/)
-          .expect(400, done)
+          .expect(400)
+          .end((err) => {
+            if (err) return done(err)
+            done()
+        })
     })
 })
