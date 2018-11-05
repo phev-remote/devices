@@ -51,6 +51,7 @@ describe('App', () => {
           .set('Accept', 'application/json')
           .set('Authorization', 'Bearer 1234')
           .expect(200)
+          .expect({ deviceId : 'my-device2', uid : '123' })
           .end((err) => {
             if (err) return done(err)
             done()
@@ -94,6 +95,7 @@ describe('App', () => {
           .set('Authorization', 'Bearer 1234')
           .expect('Content-Type', /json/)
           .expect(400)
+          .expect({ error : 'Device does not exist'})
           .end((err) => {
             if (err) return done(err)
             done()
