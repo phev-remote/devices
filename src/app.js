@@ -41,37 +41,34 @@ const App = deps => {
             res.status(400).send({ error : 'No auth token'})
         }
     })
-    /*
+    
     http.post('/:deviceId', async (req, res) => {
 
         const deviceId = req.params.deviceId
 
         if(!deviceId) {
-            res.status(400).send('No device specified')
+            res.status(400).send({error :'No device specified'})
         }
 
         if(req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') { 
             const token = req.headers.authorization.split(' ')[1]
-            try {
-                if(req.body.state.aircon) {
-                    await aircon.turnOn({ deviceId, jwt: token })  
-                
-                    res.status(200).send({ response : 'ok'})
+
+            const response = await deviceRegistry.create({ deviceId, jwt : token})
+
+            if(response.error) {
+                if(response.error.alreadyExists) {
+                    res.status(409).send({response : 'already exists'})
                 } else {
-                    await aircon.turnOff({ deviceId, jwt: token })
-                
-                    res.status(200).send({ response : 'ok'})
-                } 
-            } catch (err) {
-                res.status(500).send({ error : err})
+                    res.status(400).send(response)
+                }
+                return
             }
+            res.status(201).send(response)            
         } else {
-            res.status(401).send('Unauthorised')
+            res.status(401).send({ error : 'Unauthorised'})
         }
+        return
     })
-    */
-    
-    console.log(`Running on http://${HOST}:${PORT}`)
 
     return http.listen(PORT, HOST)
 }

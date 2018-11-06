@@ -101,4 +101,33 @@ describe('App', () => {
             done()
         })
     })
+    it('post should create new device', async () => {
+        
+        await request(app)
+          .post('/my-device3')
+          .set('Accept', 'application/json')
+          .set('Authorization', 'Bearer 1234')
+          .expect('Content-Type', /json/)
+          .expect(201)
+          .expect({ response : 'ok'})
+    
+        
+        await request(app)
+          .get('/my-device3')
+          .set('Accept', 'application/json')
+          .set('Authorization', 'Bearer 1234')
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .expect({ deviceId : 'my-device3', uid : '123'})
+    })
+    it('post should not create duplicate device', async () => {
+        
+        await request(app)
+          .post('/my-device2')
+          .set('Accept', 'application/json')
+          .set('Authorization', 'Bearer 1234')
+          .expect('Content-Type', /json/)
+          .expect(409)
+          .expect({ response : 'already exists'})  
+      })
 })

@@ -109,4 +109,20 @@ describe('Device Registry', () => {
         assert.isTrue(response.error.authError)
         
     })
+    it('Should create device', async () => {
+    
+        const deps = {
+            jwt,
+            store
+        }
+    
+        const deviceRegistry = new DeviceRegistry(deps)
+        
+        const response = await deviceRegistry.create({ deviceId : 'newdevice', jwt : 'yyyyy' })
+
+        assert.isNotNull(response)
+        assert.deepEqual(response, { response : 'ok'})
+        
+        assert.isTrue(store.has('newdevice'))
+    })
 })
